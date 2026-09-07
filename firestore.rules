@@ -1,0 +1,78 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signed(){ return request.auth != null; }
+    function admin(){ return signed() && request.auth.token.admin == true; }
+    function owner(uid){ return signed() && request.auth.uid == uid; }
+
+    match /users/{uid} {
+      allow read: if owner(uid) || admin();
+      allow create, update: if owner(uid);
+      allow delete: if owner(uid) || admin();
+    }
+
+    match /publicSpaces/{uid} {
+      allow read: if true;
+      allow create, update: if owner(uid) || admin();
+      allow delete: if owner(uid) || admin();
+    }
+
+    match /spaces/{id} {
+      allow read: if true;
+      allow create: if signed() && request.resource.data.ownerUid == request.auth.uid;
+      allow update, delete: if signed() && resource.data.ownerUid == request.auth.uid || admin();
+    }
+
+    match /works/{id} {
+      allow read: if admin()
+        || (signed() && resource.data.ownerUid == request.auth.uid)
+        || (resource.data.status == 'published' && resource.data.visibility == 'public');
+
+      // Normal users may only create drafts or submissions. Admin can publish directly.
+      allow create: if admin()
+        || (signed()
+          && request.resource.data.ownerUid == request.auth.uid
+          && request.resource.data.status in ['draft','pending']
+          && request.resource.data.visibility in ['private','submitted']);
+
+      allow update: if admin()
+        || (signed() && resource.data.ownerUid == request.auth.uid
+          && request.resource.data.ownerUid == request.auth.uid
+          && (
+            (request.resource.data.status in ['draft','pending','rejected']
+              && request.resource.data.visibility in ['private','submitted'])
+            || (resource.data.status == 'published'
+              && request.resource.data.status == 'published'
+              && request.resource.data.visibility in ['public', 'private']
+              && request.resource.data.diff(resource.data).affectedKeys()
+                .hasOnly(['visibility', 'updatedAt']))
+          ));
+
+      allow delete: if admin() || (signed() && resource.data.ownerUid == request.auth.uid);
+
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if signed() && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 500;
+        allow delete: if admin() || (signed() && resource.data.uid == request.auth.uid);
+        allow update: if false;
+      }
+    }
+
+    match /{category}/{docId} {
+      allow read: if category in ['quotes','poems','articles','songs','photos','stories'];
+      allow create, delete: if admin();
+      // Engagement is changed only by Cloud Functions, which use the Admin SDK.
+      allow update: if admin();
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if signed() && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 500;
+        allow delete: if admin() || (signed() && resource.data.uid == request.auth.uid);
+        allow update: if false;
+      }
+    }
+  }
+}

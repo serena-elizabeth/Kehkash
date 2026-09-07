@@ -1,0 +1,23 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signed(){ return request.auth != null; }
+    function admin(){ return signed() && request.auth.token.email == 'serenaejacob@gmail.com'; }
+    function owner(uid){ return signed() && request.auth.uid == uid; }
+
+    match /spaces/{uid}/{fileName} {
+      allow read: if true;
+      allow write: if owner(uid) && request.resource.size < 2 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp|svg\\+xml)');
+      allow delete: if owner(uid) || admin();
+    }
+
+    match /user-works/{uid}/{fileName} {
+      allow read: if true;
+      allow write: if (owner(uid) || admin())
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)|application/pdf|application/msword|application/vnd.openxmlformats-officedocument.wordprocessingml.document|audio/(mpeg|wav|x-wav|mp4|ogg)');
+      allow delete: if owner(uid) || admin();
+    }
+  }
+}
