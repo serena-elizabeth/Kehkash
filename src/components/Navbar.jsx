@@ -81,7 +81,7 @@ export default function Navbar() {
               Kehkash
             </span>
           </Link>
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden min-[900px]:flex items-center gap-6">
             <Link className="nav-link" to="/explore">
               Explore
             </Link>
@@ -163,7 +163,7 @@ export default function Navbar() {
               )}
             </div>
             <button
-              className="lg:hidden icon-action p-2"
+              className="min-[900px]:hidden icon-action p-2"
               onClick={() => setOpen(!open)}
             >
               {open ? <FiX /> : <FiMenu />}
