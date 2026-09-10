@@ -1178,356 +1178,7 @@ body {
   inset: 0;
 }
 /* =========================================================
-   CINEMATIC TIMELINE
-   ========================================================= */
-
-.cinematic-timeline {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  min-height: 760px;
-  margin: 8rem 0;
-  overflow: hidden;
-  background: #020201;
-  border-top: 1px solid rgba(212, 175, 55, 0.18);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
-  isolation: isolate;
-
-  --gold: #d4af37;
-  --gold-bright: #f3d77a;
-}
-
-/* Background image */
-
-.cinematic-background {
-  position: absolute;
-  inset: 0;
-  z-index: -5;
-
-  background-image:
-    linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.45),
-      rgba(0, 0, 0, 0.15) 45%,
-      rgba(0, 0, 0, 0.8)
-    ),
-    url("/cinematic-me.png");
-
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  transform: scale(1.04);
-}
-
-/* Dark cinematic overlay */
-
-.cinematic-timeline::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -3;
-  pointer-events: none;
-
-  background:
-    radial-gradient(
-      circle at var(--mouse-x) var(--mouse-y),
-      rgba(238, 187, 72, 0.14),
-      transparent 20%,
-      transparent 48%
-    ),
-    linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0.72),
-      transparent 35%,
-      transparent 65%,
-      rgba(0, 0, 0, 0.72)
-    );
-}
-
-/* Cursor atmosphere */
-
-.cursor-atmosphere {
-  position: absolute;
-  width: 280px;
-  height: 280px;
-  left: var(--mouse-x);
-  top: var(--mouse-y);
-
-  transform: translate(-50%, -50%);
-
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 2;
-
-  background: radial-gradient(
-    circle,
-    rgba(255, 214, 105, 0.14),
-    rgba(218, 157, 42, 0.06) 30%,
-    transparent 70%
-  );
-
-  filter: blur(10px);
-  mix-blend-mode: screen;
-
-  transition:
-    left 0.08s linear,
-    top 0.08s linear;
-}
-
-/* Heading */
-
-.timeline-heading {
-  position: absolute;
-  top: 8%;
-  left: 4%;
-  z-index: 8;
-  color: #eee5d2;
-}
-
-.timeline-heading > span {
-  display: block;
-  margin-bottom: 1rem;
-
-  color: var(--gold);
-  font-size: 0.65rem;
-  letter-spacing: 0.45em;
-}
-
-.timeline-heading h2 {
-  margin: 0;
-
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2rem, 4vw, 4.5rem);
-  font-weight: 400;
-  line-height: 0.95;
-  letter-spacing: 0.08em;
-}
-
-.heading-line {
-  width: 42px;
-  height: 1px;
-  margin: 1.5rem 0;
-
-  background: var(--gold);
-}
-
-.timeline-heading p {
-  margin: 0;
-
-  color: rgba(238, 229, 210, 0.58);
-  font-size: 0.7rem;
-  line-height: 1.8;
-  letter-spacing: 0.15em;
-}
-
-/* Instruction */
-
-.timeline-instruction {
-  position: absolute;
-  top: 9%;
-  right: 4%;
-  z-index: 8;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.35rem;
-
-  color: var(--gold);
-  font-size: 0.58rem;
-  letter-spacing: 0.4em;
-}
-
-.timeline-instruction i {
-  display: block;
-  width: 32px;
-  height: 1px;
-  margin-top: 0.6rem;
-  background: rgba(212, 175, 55, 0.6);
-}
-
-/* Stage */
-
-.timeline-stage {
-  position: absolute;
-  inset: 0;
-}
-
-
-/* Inactive timeline events */
-
-.timeline-event:not(.is-active) {
-  opacity: 0.55;
-}
-
-.timeline-event:not(.is-active) .event-card {
-  opacity: 0.72;
-
-  transform: translateX(-50%) translateY(8px) scale(0.94);
-}
-
-/* Active timeline event */
-
-.timeline-event.is-active {
-  color: #fff2cc;
-  opacity: 1;
-}
-
-.timeline-event.is-active .timeline-year {
-  color: #fff2cc;
-
-  transform: scale(1.15);
-}
-
-.timeline-event.is-active {
-  background: var(--gold-bright);
-
-  transform: translateX(-50%) scale(1.7);
-
-  box-shadow:
-    0 0 10px var(--gold),
-    0 0 30px rgba(212, 175, 55, 0.8);
-}
-
-/* Event cards */
-
-.event-card {
-  position: absolute;
-
-  left: 50%;
-  top: 78px;
-
-  width: 190px;
-
-  padding: 0.8rem;
-
-  text-align: left;
-
-  background: rgba(8, 6, 3, 0.78);
-
-  border: 1px solid rgba(212, 175, 55, 0.18);
-  border-radius: 4px;
-
-  opacity: 0.28;
-
-  transform: translateX(-50%) translateY(10px) scale(0.94);
-
-  backdrop-filter: blur(10px);
-
-  transition:
-    opacity 0.45s ease,
-    transform 0.45s ease,
-    border-color 0.45s ease,
-    box-shadow 0.45s ease;
-}
-
-/* Active event card */
-.timeline-node {
-  position: absolute;
-
-  left: 50%;
-  top: 50%;
-
-  width: 6px;
-  height: 6px;
-
-  border-radius: 50%;
-
-  background: rgba(212, 175, 55, 0.55);
-
-  transform: translate(-50%, -50%);
-
-  box-shadow:
-    0 0 8px rgba(212, 175, 55, 0.35);
-
-  transition:
-    background 0.4s ease,
-    transform 0.4s ease,
-    box-shadow 0.4s ease;
-}
-
-.timeline-event.is-active .timeline-node {
-  background: var(--gold-bright);
-
-  transform: translate(-50%, -50%) scale(1.7);
-
-  box-shadow:
-    0 0 10px var(--gold),
-    0 0 30px rgba(212, 175, 55, 0.8);
-}
-.timeline-event.is-active .event-card {
-  opacity: 1;
-
-  transform: translateX(-50%) translateY(0) scale(1);
-
-  border-color: rgba(212, 175, 55, 0.65);
-
-  box-shadow:
-    0 0 30px rgba(212, 175, 55, 0.12),
-    inset 0 0 20px rgba(212, 175, 55, 0.04);
-}
-
-/* Event image */
-
-.event-image {
-  display: block;
-
-  width: 100%;
-  height: 55px;
-
-  margin-bottom: 0.6rem;
-
-  background: linear-gradient(
-    135deg,
-    rgba(212, 175, 55, 0.15),
-    rgba(0, 0, 0, 0.8)
-  );
-}
-
-/* Event title */
-
-.event-card strong {
-  display: block;
-
-  color: rgba(255, 240, 202, 0.85);
-
-  font-size: 0.8rem;
-  font-weight: 400;
-}
-
-/* Event category */
-
-.event-card b {
-  display: block;
-
-  margin-top: 0.25rem;
-
-  color: var(--gold);
-
-  font-size: 0.55rem;
-
-  letter-spacing: 0.18em;
-}
-
-/* Event description */
-
-.event-card small {
-  display: block;
-
-  margin-top: 0.5rem;
-
-  color: rgba(238, 229, 210, 0.5);
-
-  font-size: 0.48rem;
-
-  line-height: 1.5;
-
-  letter-spacing: 0.08em;
-}
-
-/* =========================================================
-   CINEMATIC TIMELINE
+   CINEMATIC TIMELINE — 2.5D BASE
    ========================================================= */
 
 .cinematic-timeline {
@@ -1535,100 +1186,117 @@ body {
   width: 100%;
   height: 820px;
   min-height: 820px;
-
   margin: 8rem 0;
-
   overflow: hidden;
-
-  background: #020201;
-
   isolation: isolate;
+  touch-action: none;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(212, 175, 55, 0.08),
+      transparent 42%
+    ),
+    #030303;
 
   --gold: #d4af37;
-  --gold-bright: #f3d77a;
+  --gold-bright: #f0d080;
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --parallax-x: 0;
+  --parallax-y: 0;
 }
+
+
+/* =========================================================
+   BACKGROUND
+   ========================================================= */
 
 .cinematic-background {
   position: absolute;
-  inset: 0;
-  z-index: 1;
-  overflow: hidden;
+  inset: -2%;
+  z-index: 0;
+  pointer-events: none;
+
+  transform:
+    translate3d(
+      calc(var(--parallax-x) * -35px),
+      calc(var(--parallax-y) * -25px),
+      0
+    )
+    scale(1.04);
+
+  will-change: transform;
 }
 
-.cinematic-background img {
+.cinematic-background-image {
   width: 100%;
   height: 100%;
   display: block;
+
   object-fit: cover;
-  object-position: center center;
+  object-position: center;
 }
 
+
 /* =========================================================
-   CINEMATIC DARK OVERLAY
+   SILHOUETTE
    ========================================================= */
 
-.cinematic-timeline::after {
-  content: "";
-
+.cinematic-silhouette {
   position: absolute;
   inset: 0;
+  z-index: 4;
 
-  z-index: -3;
+  pointer-events: none;
+
+  transform:
+    translate3d(
+      calc(var(--parallax-x) * 45px),
+      calc(var(--parallax-y) * 30px),
+      0
+    );
+
+  will-change: transform;
+}
+
+.cinematic-silhouette img {
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+
+/* =========================================================
+   CINEMATIC VIGNETTE
+   ========================================================= */
+
+.cinematic-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
 
   pointer-events: none;
 
   background:
     radial-gradient(
-      circle at var(--mouse-x) var(--mouse-y),
-      rgba(238, 187, 72, 0.12),
-      transparent 24%,
-      transparent 55%
+      ellipse at center,
+      transparent 28%,
+      rgba(0, 0, 0, 0.18) 58%,
+      rgba(0, 0, 0, 0.72) 100%
     ),
     linear-gradient(
       90deg,
-      rgba(0, 0, 0, 0.48),
-      transparent 30%,
-      transparent 70%,
-      rgba(0, 0, 0, 0.48)
+      rgba(0, 0, 0, 0.28),
+      transparent 24%,
+      transparent 76%,
+      rgba(0, 0, 0, 0.28)
     );
 }
 
-/* =========================================================
-   CURSOR ATMOSPHERE
-   ========================================================= */
-
-.cursor-atmosphere {
-  position: absolute;
-
-  width: 260px;
-  height: 260px;
-
-  left: var(--mouse-x);
-  top: var(--mouse-y);
-
-  transform: translate(-50%, -50%);
-
-  border-radius: 50%;
-
-  pointer-events: none;
-
-  z-index: 2;
-
-  background: radial-gradient(
-    circle,
-    rgba(255, 214, 105, 0.12),
-    rgba(218, 157, 42, 0.04) 35%,
-    transparent 70%
-  );
-
-  filter: blur(12px);
-
-  mix-blend-mode: screen;
-
-  transition:
-    left 0.08s linear,
-    top 0.08s linear;
-}
 
 /* =========================================================
    HEADING
@@ -1636,99 +1304,101 @@ body {
 
 .timeline-heading {
   position: absolute;
+  top: 72px;
+  left: 7%;
 
-  top: 7%;
-  left: 4%;
+  z-index: 20;
 
-  z-index: 8;
-
-  color: #eee5d2;
+  pointer-events: none;
 }
 
 .timeline-heading > span {
   display: block;
 
-  margin-bottom: 1rem;
+  margin-bottom: 14px;
 
   color: var(--gold);
-
-  font-size: 0.65rem;
-
-  letter-spacing: 0.45em;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.42em;
 }
 
 .timeline-heading h2 {
   margin: 0;
 
+  color: #f5f1e7;
+
   font-family: Georgia, "Times New Roman", serif;
-
-  font-size: clamp(2rem, 4vw, 4.5rem);
-
+  font-size: clamp(2.4rem, 4vw, 4.8rem);
   font-weight: 400;
-
-  line-height: 0.95;
-
-  letter-spacing: 0.08em;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
 }
 
 .heading-line {
-  width: 42px;
+  width: 72px;
   height: 1px;
 
-  margin: 1.5rem 0;
+  margin: 24px 0 16px;
 
-  background: var(--gold);
+  background: linear-gradient(
+    90deg,
+    var(--gold),
+    transparent
+  );
 }
 
 .timeline-heading p {
   margin: 0;
 
-  color: rgba(238, 229, 210, 0.65);
+  color: rgba(235, 230, 218, 0.58);
 
-  font-size: 0.7rem;
-
-  line-height: 1.8;
-
-  letter-spacing: 0.15em;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  letter-spacing: 0.08em;
 }
 
+
 /* =========================================================
-   RIGHT INSTRUCTION
+   RIGHT-SIDE INSTRUCTION
    ========================================================= */
 
 .timeline-instruction {
   position: absolute;
+  top: 50%;
+  right: 3%;
 
-  top: 8%;
-  right: 4%;
-
-  z-index: 8;
+  z-index: 20;
 
   display: flex;
-
   flex-direction: column;
+  align-items: center;
+  gap: 13px;
 
-  align-items: flex-end;
+  transform: translateY(-50%);
 
-  gap: 0.35rem;
-
-  color: var(--gold);
+  color: rgba(212, 175, 55, 0.65);
 
   font-size: 0.58rem;
+  letter-spacing: 0.3em;
 
-  letter-spacing: 0.4em;
+  pointer-events: none;
 }
 
 .timeline-instruction i {
   display: block;
 
-  width: 32px;
-  height: 1px;
+  width: 1px;
+  height: 90px;
 
-  margin-top: 0.6rem;
-
-  background: rgba(212, 175, 55, 0.6);
+  background: linear-gradient(
+    to bottom,
+    rgba(212, 175, 55, 0.05),
+    rgba(212, 175, 55, 0.7),
+    rgba(212, 175, 55, 0.05)
+  );
 }
+
 
 /* =========================================================
    TIMELINE STAGE
@@ -1738,47 +1408,102 @@ body {
   position: absolute;
   inset: 0;
 
-  width: 100%;
-  height: 100%;
-}
-
-/* =========================================================
-   TIMELINE POINTS
-   ========================================================= */
-
-.timeline-points {
-  position: absolute;
-
-  left: 6%;
-  right: 6%;
-
-  top: 20%;
-
-  width: 88%;
-  height: 130px;
-
   z-index: 10;
+
+  perspective: 1400px;
+  transform-style: preserve-3d;
 }
 
+
 /* =========================================================
-   YEAR EVENTS
+   LIGHT ORIGIN
    ========================================================= */
-.timeline-events {
+
+.timeline-light-origin {
   position: absolute;
 
-  inset: 0;
+  left: 50%;
+  top: 22%;
 
-  width: 100%;
-  height: 100%;
+  width: 8px;
+  height: 8px;
 
-  z-index: 12;
+  z-index: 18;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: var(--gold-bright);
+
+  box-shadow:
+    0 0 8px rgba(240, 208, 128, 0.9),
+    0 0 25px rgba(212, 175, 55, 0.6),
+    0 0 55px rgba(212, 175, 55, 0.3);
 
   pointer-events: none;
 }
 
-.timeline-events .timeline-event {
-  pointer-events: auto;
+.timeline-light-origin span {
+  position: absolute;
+  inset: -18px;
+
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  border-radius: 50%;
 }
+
+
+/* =========================================================
+   BEAM
+   ========================================================= */
+
+.timeline-beam {
+  position: absolute;
+
+  left: 50%;
+  top: 22%;
+
+  width: 1px;
+  height: 58%;
+
+  z-index: 17;
+
+  transform-origin: 50% 0;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(240, 208, 128, 0.95),
+    rgba(212, 175, 55, 0.35) 35%,
+    rgba(212, 175, 55, 0.04) 100%
+  );
+
+  box-shadow:
+    0 0 8px rgba(212, 175, 55, 0.45),
+    0 0 25px rgba(212, 175, 55, 0.18);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   EVENT CONTAINER
+   ========================================================= */
+
+.timeline-events {
+  position: absolute;
+  inset: 0;
+
+  z-index: 25;
+
+  pointer-events: none;
+
+  transform-style: preserve-3d;
+}
+
+
+/* =========================================================
+   EVENT BUTTON
+   ========================================================= */
 
 .timeline-event {
   position: absolute;
@@ -1787,312 +1512,238 @@ body {
   top: var(--event-y);
 
   width: 190px;
-  min-height: 150px;
 
   padding: 0;
-
   border: 0;
 
   background: transparent;
+
+  color: inherit;
+
+  cursor: pointer;
+
+  pointer-events: auto;
 
   transform:
     translate(-50%, -50%)
     rotate(var(--event-rotation))
     scale(var(--event-scale));
 
-  transform-origin: center center;
-
-  cursor: pointer;
-
-  color: rgba(238, 229, 210, 0.5);
-
-  z-index: 12;
+  transform-style: preserve-3d;
 
   transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.4s ease,
-    opacity 0.4s ease;
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 400ms ease;
+
+  opacity: 0.58;
+
+  font: inherit;
 }
 
-.timeline-year {
-  display: block;
-
-  font-family: Arial, sans-serif;
-
-  font-size: clamp(1.2rem, 2.2vw, 2.4rem);
-
-  font-weight: 600;
-
-  letter-spacing: -0.03em;
-
-  white-space: nowrap;
-
-  transition:
-    color 0.4s ease,
-    transform 0.4s ease,
-    text-shadow 0.4s ease;
-}
-
-
-/* =========================================================
-   INACTIVE EVENTS
-   ========================================================= */
-
-.timeline-event:not(.is-active) {
-  opacity: 0.5;
-}
-
-/* =========================================================
-   ACTIVE EVENT
-   ========================================================= */
-
+.timeline-event:hover,
 .timeline-event.is-active {
-  color: #fff2cc;
-
   opacity: 1;
 }
 
-.timeline-event.is-active .timeline-year {
-  color: #fff2cc;
 
-  transform: scale(1.12);
+/* =========================================================
+   YEAR
+   ========================================================= */
 
-  text-shadow: 0 0 10px rgba(255, 223, 140, 0.45);
+.timeline-year {
+  position: absolute;
+
+  left: 50%;
+  top: -27px;
+
+  transform: translateX(-50%);
+
+  color: rgba(240, 208, 128, 0.8);
+
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+
+  white-space: nowrap;
 }
 
-.timeline-event.is-active {
-  background: var(--gold-bright);
 
-  transform: translateX(-50%) scale(1.7);
+/* =========================================================
+   NODE
+   ========================================================= */
+
+.timeline-node {
+  position: absolute;
+
+  left: 50%;
+  top: 0;
+
+  width: 5px;
+  height: 5px;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: var(--gold);
 
   box-shadow:
-    0 0 10px var(--gold),
-    0 0 30px rgba(212, 175, 55, 0.8);
+    0 0 8px rgba(212, 175, 55, 0.75),
+    0 0 18px rgba(212, 175, 55, 0.3);
 }
+
 
 /* =========================================================
    EVENT CARD
    ========================================================= */
 
 .event-card {
-  position: absolute;
+  position: relative;
 
-  left: 50%;
-  top: 88px;
+  display: flex;
 
-  width: 185px;
+  width: 190px;
+  min-height: 92px;
 
-  padding: 0.85rem;
+  overflow: hidden;
+
+  border: 1px solid rgba(212, 175, 55, 0.22);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(22, 19, 14, 0.88),
+      rgba(4, 4, 4, 0.94)
+    );
+
+  box-shadow:
+    0 16px 45px rgba(0, 0, 0, 0.42),
+    inset 0 0 30px rgba(212, 175, 55, 0.025);
+
+  backdrop-filter: blur(8px);
 
   text-align: left;
 
-  background: rgba(8, 6, 3, 0.78);
-
-  border: 1px solid rgba(212, 175, 55, 0.16);
-
-  border-radius: 4px;
-
-  opacity: 0.72;
-
-  transform: translateX(-50%) translateY(12px) scale(0.94);
-
-  backdrop-filter: blur(10px);
-
   transition:
-    opacity 0.45s ease,
-    transform 0.45s ease,
-    border-color 0.45s ease,
-    box-shadow 0.45s ease;
+    border-color 400ms ease,
+    box-shadow 400ms ease,
+    transform 400ms ease;
 }
 
+.event-card::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.06),
+      transparent 22%,
+      transparent 75%,
+      rgba(212, 175, 55, 0.04)
+    );
+}
+
+.timeline-event:hover .event-card,
 .timeline-event.is-active .event-card {
-  opacity: 1;
+  border-color: rgba(240, 208, 128, 0.65);
 
-  transform: translateX(-50%) translateY(0) scale(1);
-
-  border-color: rgba(212, 175, 55, 0.65);
-
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.12);
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.5),
+    0 0 24px rgba(212, 175, 55, 0.1);
 }
+
+
+/* =========================================================
+   EVENT IMAGE PLACEHOLDER
+   ========================================================= */
 
 .event-image {
-  display: block;
+  position: relative;
 
-  width: 100%;
-  height: 55px;
+  width: 48px;
+  min-width: 48px;
 
-  margin-bottom: 0.6rem;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(212, 175, 55, 0.28),
+      rgba(212, 175, 55, 0.03)
+    );
 
-  background: linear-gradient(
-    135deg,
-    rgba(212, 175, 55, 0.15),
-    rgba(0, 0, 0, 0.8)
-  );
+  border-right: 1px solid rgba(212, 175, 55, 0.16);
 }
 
-.event-card strong {
-  display: block;
 
-  color: rgba(255, 240, 202, 0.85);
+/* =========================================================
+   EVENT CONTENT
+   ========================================================= */
 
-  font-size: 0.8rem;
+.event-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
-  font-weight: 400;
+  padding: 13px 14px;
+
+  gap: 3px;
 }
 
-.event-card b {
-  display: block;
-
-  margin-top: 0.25rem;
-
-  color: var(--gold);
+.event-content strong {
+  color: rgba(240, 208, 128, 0.65);
 
   font-size: 0.55rem;
-
+  font-weight: 500;
   letter-spacing: 0.18em;
 }
 
-.event-card small {
-  display: block;
+.event-content b {
+  color: #eee8da;
 
-  margin-top: 0.5rem;
-
-  color: rgba(238, 229, 210, 0.5);
-
-  font-size: 0.48rem;
-
-  line-height: 1.5;
-
-  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
 }
 
+.event-content small {
+  color: rgba(235, 230, 218, 0.48);
+
+  font-size: 0.58rem;
+  line-height: 1.45;
+}
+
+
 /* =========================================================
-   FIXED LIGHT ORIGIN
+   SELECTED EVENT GLOW
    ========================================================= */
 
-.timeline-light-origin {
+.selected-event-glow {
   position: absolute;
 
-  left: 50%;
-  top: 8%;
+  width: 80px;
+  height: 80px;
 
-  width: 9px;
-  height: 9px;
-
-  border-radius: 50%;
+  z-index: 8;
 
   transform: translate(-50%, -50%);
 
-  z-index: 16;
-
-  background: #fff4c2;
-
-  box-shadow:
-    0 0 8px rgba(255, 232, 153, 1),
-    0 0 22px rgba(212, 175, 55, 0.9),
-    0 0 50px rgba(212, 175, 55, 0.45);
-
-  pointer-events: none;
-}
-
-/* =========================================================
-   MOUSE-DIRECTED BEAM
-   ========================================================= */
-
-.timeline-beam {
-  position: absolute;
-
-  left: 50%;
-  top: 8%;
-
-  width: 3px;
-
-  height: 52%;
-
-  transform-origin: top center;
-
-  pointer-events: none;
-
-  z-index: 15;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 242, 190, 0.98),
-    rgba(243, 181, 58, 0.65),
-    rgba(243, 181, 58, 0.12),
-    transparent
-  );
-
-  box-shadow:
-    0 0 8px rgba(255, 214, 105, 0.95),
-    0 0 24px rgba(212, 175, 55, 0.5),
-    0 0 60px rgba(212, 175, 55, 0.18);
-
-  opacity: 0.82;
-
-  transition: transform 0.12s ease-out;
-}
-
-.timeline-light-origin {
-  position: absolute;
-  left: 50%;
-  top: 8%;
-  width: 12px;
-  height: 12px;
-  transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: #fff4c7;
-  box-shadow:
-    0 0 8px #fff4c7,
-    0 0 24px rgba(212, 175, 55, 0.8);
-  z-index: 20;
-}
 
-.timeline-beam {
-  position: absolute;
-
-  left: 50%;
-  top: 8%;
-
-  width: 2px;
-  height: 42%;
-
-  transform-origin: top center;
-
-  pointer-events: none;
-  z-index: 19;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 244, 199, 0.95),
-    rgba(212, 175, 55, 0.5),
-    transparent
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.16),
+    transparent 68%
   );
 
-  box-shadow:
-    0 0 8px rgba(255, 230, 150, 0.8),
-    0 0 25px rgba(212, 175, 55, 0.3);
+  filter: blur(5px);
+
+  pointer-events: none;
 }
 
-.floor-rings span:nth-child(1) {
-  width: 25%;
-  height: 25%;
-}
-
-.floor-rings span:nth-child(2) {
-  width: 45%;
-  height: 40%;
-}
-
-.floor-rings span:nth-child(3) {
-  width: 68%;
-  height: 58%;
-}
-
-.floor-rings span:nth-child(4) {
-  width: 95%;
-  height: 78%;
-}
 
 /* =========================================================
    ACTIVE EVENT INFORMATION
@@ -2101,43 +1752,43 @@ body {
 .active-event {
   position: absolute;
 
-  left: 4%;
-  bottom: 8%;
+  left: 7%;
+  bottom: 58px;
 
-  z-index: 8;
+  z-index: 30;
 
-  max-width: 220px;
+  width: 270px;
+
+  pointer-events: none;
 }
 
 .active-event > span {
   color: var(--gold);
 
-  font-size: 0.65rem;
-
-  letter-spacing: 0.3em;
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
 }
 
 .active-event h3 {
-  margin: 0.4rem 0;
+  margin: 8px 0 6px;
 
-  color: #f6ecd5;
+  color: #f2ede1;
 
   font-family: Georgia, "Times New Roman", serif;
-
-  font-size: 1.5rem;
-
+  font-size: 1.45rem;
   font-weight: 400;
+  letter-spacing: 0.03em;
 }
 
 .active-event p {
   margin: 0;
 
-  color: rgba(238, 229, 210, 0.5);
+  color: rgba(235, 230, 218, 0.52);
 
-  font-size: 0.65rem;
-
+  font-size: 0.7rem;
   line-height: 1.6;
 }
+
 
 /* =========================================================
    FOOTER
@@ -2146,85 +1797,43 @@ body {
 .timeline-footer {
   position: absolute;
 
-  right: 4%;
-  bottom: 8%;
+  left: 7%;
+  right: 7%;
+  bottom: 22px;
 
-  z-index: 8;
+  z-index: 30;
 
   display: flex;
+  justify-content: space-between;
 
-  flex-direction: column;
+  color: rgba(212, 175, 55, 0.38);
 
-  align-items: flex-end;
-
-  gap: 0.4rem;
-
-  color: rgba(212, 175, 55, 0.65);
-
-  font-size: 0.55rem;
-
+  font-size: 0.5rem;
   letter-spacing: 0.3em;
+
+  pointer-events: none;
 }
 
-/* =========================================================
-   FULL WIDTH
-   ========================================================= */
-
-.cinematic-full-width {
-  width: 100%;
-  max-width: 100%;
-
-  margin-left: 0;
-  margin-right: 0;
-
-  margin-top: 8rem;
-  margin-bottom: 8rem;
-}
-
-/* =========================================================
-   NO HORIZONTAL PAGE SCROLL
-   ========================================================= */
-
-html,
-body {
-  overflow-x: hidden;
-}
-
-#root {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* =========================================================
-   DESKTOP / LAPTOP
-   ========================================================= */
-
-@media (min-width: 769px) {
-  .cinematic-timeline {
-    height: 820px;
-  }
-}
 
 /* =========================================================
    MOBILE
    ========================================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .cinematic-timeline {
-    height: 850px;
-    min-height: 850px;
+    height: 720px;
+    min-height: 720px;
 
-    margin: 5rem -1rem;
+    margin: 5rem 0;
   }
 
   .timeline-heading {
-    top: 6%;
-    left: 6%;
+    top: 42px;
+    left: 5%;
   }
 
   .timeline-heading h2 {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 
   .timeline-heading p {
@@ -2232,29 +1841,73 @@ body {
   }
 
   .timeline-instruction {
-    top: 7%;
-    right: 6%;
-  }
-
-  .event-card {
-    width: 120px;
-  }
-
-  .cinematic-person {
-    width: 65vw;
-    min-width: 220px;
-  }
-
-  .active-event {
-    left: 6%;
-    bottom: 5%;
-  }
-
-  .timeline-footer {
     display: none;
   }
 
-  .floor-rings {
-    width: 130%;
+  .timeline-event {
+    width: 155px;
+  }
+
+  .event-card {
+    width: 155px;
+    min-height: 76px;
+  }
+
+  .event-image {
+    width: 36px;
+    min-width: 36px;
+  }
+
+  .event-content {
+    padding: 9px 10px;
+  }
+
+  .event-content b {
+    font-size: 0.6rem;
+  }
+
+  .event-content small {
+    font-size: 0.5rem;
+  }
+
+  .active-event {
+    left: 5%;
+    bottom: 52px;
+  }
+
+  .timeline-footer {
+    left: 5%;
+    right: 5%;
+  }
+}
+
+@media (max-width: 600px) {
+  .cinematic-timeline {
+    height: 650px;
+    min-height: 650px;
+  }
+
+  .timeline-heading h2 {
+    font-size: 2rem;
+  }
+
+  .timeline-event {
+    width: 135px;
+  }
+
+  .event-card {
+    width: 135px;
+  }
+
+  .event-image {
+    display: none;
+  }
+
+  .event-content {
+    padding: 8px;
+  }
+
+  .active-event {
+    width: 220px;
   }
 }

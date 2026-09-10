@@ -55,48 +55,74 @@ export default function CinematicTimeline() {
     y: 22,
   });
 
-  useEffect(() => {
-    const handleMouseMove = (event) => {
-      const scene = sceneRef.current;
+useEffect(() => {
+  const handlePointerMove = (event) => {
+    const scene = sceneRef.current;
 
-      if (!scene) return;
+    if (!scene) return;
 
-      const rect = scene.getBoundingClientRect();
+    const rect = scene.getBoundingClientRect();
 
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
+    const pointerX = event.clientX - rect.left;
+    const pointerY = event.clientY - rect.top;
 
-      const x = (mouseX / rect.width) * 100;
-      const y = (mouseY / rect.height) * 100;
+    const x = (pointerX / rect.width) * 100;
+    const y = (pointerY / rect.height) * 100;
 
-      /*
-       * FIXED LIGHT ORIGIN
-       *
-       * This point stays fixed above the timeline.
-       * The beam rotates from here toward the mouse.
-       */
+    /*
+     * 2.5D PARALLAX
+     *
+     * -1 = far left/top
+     *  0 = center
+     * +1 = far right/bottom
+     */
 
-      const originX = rect.width * 0.5;
-      const originY = rect.height * 0.22;
+    const parallaxX = (x - 50) / 50;
+    const parallaxY = (y - 50) / 50;
 
-      const dx = mouseX - originX;
-      const dy = mouseY - originY;
+    scene.style.setProperty(
+      "--parallax-x",
+      parallaxX.toFixed(3)
+    );
 
-      const angle = Math.atan2(dy, dx) * (180 / Math.PI) - 90;
+    scene.style.setProperty(
+      "--parallax-y",
+      parallaxY.toFixed(3)
+    );
 
-      setBeam({
-        angle,
-        x: Math.max(0, Math.min(100, x)),
-        y: Math.max(0, Math.min(100, y)),
-      });
-    };
+    /*
+     * BEAM
+     */
 
-    window.addEventListener("mousemove", handleMouseMove);
+    const originX = rect.width * 0.5;
+    const originY = rect.height * 0.22;
 
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
+    const dx = pointerX - originX;
+    const dy = pointerY - originY;
+
+    const angle =
+      Math.atan2(dy, dx) * (180 / Math.PI) - 90;
+
+    setBeam({
+      angle,
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y)),
+    });
+  };
+
+  window.addEventListener(
+    "pointermove",
+    handlePointerMove,
+    { passive: true }
+  );
+
+  return () => {
+    window.removeEventListener(
+      "pointermove",
+      handlePointerMove
+    );
+  };
+}, []);
 
   /*
    * Different floating positions.
@@ -183,9 +209,17 @@ return (
           MAIN IMAGE
           ================================================= */}
 
-      <div className="cinematic-background">
-        <img src="/cinematic-me.png" alt="The journey" />
-      </div>
+<div className="cinematic-background" aria-hidden="true">
+  <img
+    src="/background.png"
+    alt=""
+    className="cinematic-background-image"
+  />
+</div>
+
+<div className="cinematic-silhouette" aria-hidden="true">
+  <img src="/silhoutte-only.png" alt="" />
+</div>
 
       {/* =================================================
           CINEMATIC DARK OVERLAY
@@ -233,11 +267,7 @@ return (
 
       <div className="timeline-stage">
         {/* Thin cinematic orbit line */}
-
-        <div className="timeline-orbit orbit-back" />
-
-        <div className="timeline-orbit orbit-front" />
-
+        
         {/* Fixed beam origin */}
 
         <div className="timeline-light-origin">
@@ -307,17 +337,6 @@ return (
         {/* =================================================
             CENTER SILHOUETTE POSITION INDICATOR
             ================================================= */}
-
-        <div
-          className={`silhouette-direction ${
-            silhouetteDirection < 0
-              ? "face-left"
-              : silhouetteDirection > 0
-                ? "face-right"
-                : "face-center"
-          }`}
-        />
-
         {/* Selected event glow */}
 
         <div
